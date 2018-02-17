@@ -1,0 +1,12 @@
+{
+  "name": "cole-arterys-coding",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "mocha": "^5.0.1"
+  },
+  "scripts": {
+    "test": "mocha"
+  }
+}
