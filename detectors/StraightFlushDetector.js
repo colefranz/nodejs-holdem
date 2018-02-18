@@ -1,13 +1,12 @@
 const Cards = require('../Cards');
-const helpers = require('./helpers');
-const Detector = require('./Detector');
+const StraightDetector = require('./StraightDetector');
 
-class StraightFlushDetector extends Detector {
+class StraightFlushDetector extends StraightDetector {
   isOfType() {
-    const acesAtStart = helpers.cardsWithAcesAtFrontAndBack(this.cards);
+    const acesAtStart = this.cardsWithAcesAtFrontAndBack(this.cards);
 
     for (let suitIndex = 0; suitIndex < acesAtStart.length; suitIndex++) {
-      const tailIndex = helpers.getTailIndexOfStraight(acesAtStart[suitIndex]);
+      const tailIndex = this.getTailIndexOfStraight(acesAtStart[suitIndex]);
 
       if (tailIndex > 0) {
         const suitString = Cards.getSuitStringByIndex(suitIndex);
@@ -19,6 +18,14 @@ class StraightFlushDetector extends Detector {
       }
     }
   }
+}
+
+hasAtLeastFive = function(cards) {
+  const numberOfCards = cards.reduce(function(count, item) {
+    return count += item;
+  }, 0);
+
+  return numberOfCards >= 5;
 }
 
 module.exports = StraightFlushDetector;

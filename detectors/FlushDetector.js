@@ -1,5 +1,4 @@
 const Cards = require('../Cards');
-const {hasAtLeastFive} = require('./helpers');
 const Detector = require('./Detector');
 
 class FlushDetector extends Detector {

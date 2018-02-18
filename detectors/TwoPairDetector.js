@@ -1,6 +1,5 @@
 const Cards = require('../Cards');
 const Detector = require('./Detector');
-const {getKicker} = require('./helpers');
 
 class TwoPairDetector extends Detector {
   isOfType() {
@@ -16,7 +15,7 @@ class TwoPairDetector extends Detector {
       return this.getQuality(
         `Two pair ${firstPair} and ${secondPair}`,
         parseInt(`${firstPairIndex}${secondPairIndex}`),
-        getKicker(this.numberOfEachCard)
+        this.getKicker(this.numberOfEachCard)
       );
     }
   }

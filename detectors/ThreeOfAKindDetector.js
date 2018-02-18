@@ -1,6 +1,5 @@
 const Cards = require('../Cards');
 const Detector = require('./Detector');
-const {getKicker} = require('./helpers');
 
 class ThreeOfAKindDetector extends Detector {
   isOfType() {
@@ -11,7 +10,7 @@ class ThreeOfAKindDetector extends Detector {
       return this.getQuality(
         `Three of a Kind ${Cards.getFaceStringByIndex(index)}`,
         index,
-        getKicker(this.numberOfEachCard)
+        this.getKicker(this.numberOfEachCard)
       );
     }
   }
