@@ -1,4 +1,5 @@
 const Hand = require('./Hand');
+const Cards = require('./Cards');
 
 class Player {
   constructor(name, cards, communityCards) {

@@ -39,41 +39,6 @@ describe('cards', function() {
 });
 
 describe('Hand', function() {
-  describe('when getKicker is called', function() {
-    it('should return the higher of two cards', function() {
-      const cards = new Cards();
-
-      cards.addCard('k', 's');
-      cards.addCard('3', 's');
-
-      const hand = new Hand(cards.value);
-
-      assert(Cards.getFaceValueByIndex(hand.getKicker(hand.cards)) === 'k');
-    });
-
-    it('should return the face when equal', function() {
-      const cards = new Cards();
-
-      cards.addCard('k', 's');
-      cards.addCard('k', 'd');
-
-      const hand = new Hand(cards.value);
-
-      assert(Cards.getFaceValueByIndex(hand.getKicker(hand.cards)) === 'k');
-    });
-
-    it('should know ace is higher than king', function() {
-      const cards = new Cards();
-
-      cards.addCard('k', 's');
-      cards.addCard('a', 's');
-
-      const hand = new Hand(cards.value);
-
-      assert(Cards.getFaceValueByIndex(hand.getKicker(hand.cards)) === 'a');
-    });
-  });
-
   describe('when checking for four of a kind', function() {
     it('should properly detect a four of a kind', function() {
       const cards = new Cards();
@@ -82,10 +47,13 @@ describe('Hand', function() {
       cards.addCard('3', 'd');
       cards.addCard('3', 's');
       cards.addCard('3', 'c');
+      cards.addCard('a', 'c');
+      cards.addCard('q', 'c');
 
       const hand = new Hand(cards.value);
 
-      assert(hand.detectFourOfAKind() !== undefined);
+      assert(hand.detectFourOfAKind().asString === "Four of a Kind Three");
+      assert(hand.detectFourOfAKind().kicker === 12);
     });
 
     it('should return undefined for three of a kind', function() {
@@ -383,6 +351,7 @@ describe('Hand', function() {
       const hand = new Hand(cards.value);
 
       assert(hand.detectThreeOfAKind().asString === 'Three of a Kind Five');
+      assert(hand.detectThreeOfAKind().kicker === 1);
     });
 
     it('should use the biggest triplet', function() {
@@ -424,10 +393,14 @@ describe('Hand', function() {
       cards.addCard('a', 'd');
       cards.addCard('q', 's');
       cards.addCard('q', 'h');
+      cards.addCard('t', 'h');
+      cards.addCard('3', 'h');
+      cards.addCard('2', 'h');
 
       const hand = new Hand(cards.value);
 
       assert(hand.detectTwoPair().asString === 'Two pair Ace and Queen');
+      assert(hand.detectTwoPair().kicker === 8);
     });
 
     it('should use the biggest two pairs', function() {
@@ -446,6 +419,24 @@ describe('Hand', function() {
     });
   });
 
+  describe('when checking for a pair', function() {
+    it('should properly detect it', function() {
+      const cards = new Cards();
+
+      cards.addCard('a', 'h');
+      cards.addCard('q', 's');
+      cards.addCard('q', 'h');
+      cards.addCard('t', 'h');
+      cards.addCard('3', 'h');
+      cards.addCard('2', 'h');
+
+      const hand = new Hand(cards.value);
+
+      assert(hand.detectPair().asString === 'Pair Queen');
+      assert(hand.detectPair().kicker === 12);
+    });
+  });
+
   describe('when determining the quality of a hand', function() {
     it('detect the four of a kind over a full house', function() {
       const cards = new Cards();
@@ -459,7 +450,7 @@ describe('Hand', function() {
 
       const hand = new Hand(cards.value);
 
-      assert(hand.determineQualityOfHand().quality === 1);
+      assert(hand.determineQualityOfHand().asString === 'Four of a Kind Ace');
     });
 
     it('return the high card if there is no other', function() {
@@ -476,8 +467,7 @@ describe('Hand', function() {
 
       const qualityOfHand = hand.determineQualityOfHand();
 
-      console.log(qualityOfHand);
-      assert(qualityOfHand.output === "High Card");
+      assert(qualityOfHand.asString === "High Card");
       assert(qualityOfHand.value === 12);
     });
   });
@@ -551,35 +541,63 @@ describe('Holdem', function() {
         holdem.onNewLine('cole 7d 8d');
         holdem.onNewLine('sara kd kc');
 
-        const playersInOrder = holdem.determinePlayersOrder();
+        const displayStrings = holdem.getDisplayStrings();
 
-        assert(playersInOrder[0].name === 'cole');
-        assert(playersInOrder[1].name === 'sara');
-        assert(playersInOrder[2].name === 'michele');
+        assert(displayStrings[0].includes('cole'));
+        assert(displayStrings[1].includes('sara'));
+        assert(displayStrings[2].includes('michele'));
       });
 
-      // it('should add kickers when necessary', function() {
-      //   holdem.onNewLine('5d 6d 9d ts ks');
-      //   holdem.onNewLine('cole 5s 8d');
-      //   holdem.onNewLine('sara 5h ac');
+      it('should add kickers when necessary for pairs', function() {
+        holdem.onNewLine('5d 6d 9d ts 2s');
+        holdem.onNewLine('cole 5s 8d');
+        holdem.onNewLine('sara 5h kc');
 
-      //   const playersInOrder = holdem.determinePlayersOrder();
+        const displayStrings = holdem.getDisplayStrings();
+        holdem.displayWinners();
 
-      //   assert(playersInOrder[0].name === 'cole');
-      //   assert(playersInOrder[0].hand.output.includes('Kicker'));
-      //   assert(playersInOrder[1].name === 'sara');
-      //   assert(playersInOrder[1].hand.output.includes('Kicker'));
-      // });
+        assert(displayStrings[0].includes('sara'));
+        assert(displayStrings[0].includes('Kicker'));
+        assert(displayStrings[1].includes('cole'));
+        assert(displayStrings[1].includes('Kicker'));
+      });
+
+      it('should add kickers when necessary for two pairs', function() {
+        holdem.onNewLine('5d 6d 6s ts 2s');
+        holdem.onNewLine('cole 5s 8d');
+        holdem.onNewLine('sara 5h kc');
+
+        const displayStrings = holdem.getDisplayStrings();
+        holdem.displayWinners();
+
+        assert(displayStrings[0].includes('sara'));
+        assert(displayStrings[0].includes('Kicker'));
+        assert(displayStrings[1].includes('cole'));
+        assert(displayStrings[1].includes('Kicker'));
+      });
+
+      it('should output the right number in a straight up tie', function() {
+        holdem.onNewLine('5d 6d 9d ts as');
+        holdem.onNewLine('cole 5s 8d');
+        holdem.onNewLine('sara 5h kc');
+
+        const displayStrings = holdem.getDisplayStrings();
+        holdem.displayWinners();
+
+        assert(displayStrings[0].startsWith('1'));
+        assert(displayStrings[1].startsWith('1'));
+      });
 
       it('should know that a higher straight is worth more', function() {
         holdem.onNewLine('6d 7d 8s 9s ad');
         holdem.onNewLine('cole ts kd');
         holdem.onNewLine('sara td js');
 
-        const playersInOrder = holdem.determinePlayersOrder();
+        const displayStrings = holdem.getDisplayStrings();
+        holdem.displayWinners();
 
-        assert(playersInOrder[0].name === 'sara');
-        assert(playersInOrder[1].name === 'cole');
+        assert(displayStrings[0].includes('sara'));
+        assert(displayStrings[1].includes('cole'));
       });
 
       it('should know that a higher straight flush is worth more', function() {
@@ -587,10 +605,11 @@ describe('Holdem', function() {
         holdem.onNewLine('cole 5d kd');
         holdem.onNewLine('sara td kc');
 
-        const playersInOrder = holdem.determinePlayersOrder();
+        const displayStrings = holdem.getDisplayStrings();
+        holdem.displayWinners();
 
-        assert(playersInOrder[0].name === 'sara');
-        assert(playersInOrder[1].name === 'cole');
+        assert(displayStrings[0].includes('sara'));
+        assert(displayStrings[1].includes('cole'));
       });
     });
   });
