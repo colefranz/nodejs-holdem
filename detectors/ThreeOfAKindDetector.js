@@ -8,7 +8,7 @@ class ThreeOfAKindDetector extends Detector {
 
     if (index > 0) {
       this.numberOfEachCard[index] = 0;
-      return this.createReturnValue(
+      return this.getQuality(
         `Three of a Kind ${Cards.getFaceStringByIndex(index)}`,
         index,
         getKicker(this.numberOfEachCard)

@@ -10,7 +10,7 @@ class FullHouseDetector extends Detector {
       const tripleFaceString = Cards.getFaceStringByIndex(tripleIndex);
       const doubleFaceString = Cards.getFaceStringByIndex(doubleIndex);
 
-      return this.createReturnValue(
+      return this.getQuality(
         `Full House ${tripleFaceString}s full of ${doubleFaceString}s`,
         parseInt(`${tripleIndex}${doubleIndex}`)
       );

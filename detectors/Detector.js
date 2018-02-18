@@ -1,20 +1,20 @@
 const {flattenWithOperator, add, getKicker} = require('./helpers');
 
 class Detector {
-  constructor(cards, quality) {
+  constructor(cards, ofHand) {
     this.cards = cards;
-    this.quality = quality;
+    this.ofHand = ofHand;
     this.numberOfEachCard = flattenWithOperator(cards, add);
   }
 
   isOfType() {}
 
-  createReturnValue(asString, value = 0, kicker = 0) {
+  getQuality(asString, ofHighCard = 0, ofKicker = 0) {
     return {
       asString: asString,
-      value: value,
-      kicker: kicker,
-      quality: this.quality
+      ofHighCard: ofHighCard,
+      ofKicker: ofKicker,
+      ofHand: this.ofHand
     };
   }
 }

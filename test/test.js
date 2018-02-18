@@ -11,11 +11,11 @@ describe('cards', function() {
     it('should initialize the empty set of cards', function() {
       const cards = new Cards();
 
-      assert(cards.value.length === 4);
-      assert(cards.value[0].length === 13);
-      assert(cards.value[1].length === 13);
-      assert(cards.value[2].length === 13);
-      assert(cards.value[3].length === 13);
+      assert(cards.ofHighCard.length === 4);
+      assert(cards.ofHighCard[0].length === 13);
+      assert(cards.ofHighCard[1].length === 13);
+      assert(cards.ofHighCard[2].length === 13);
+      assert(cards.ofHighCard[3].length === 13);
     });
 
     it('should be able to add a card', function() {
@@ -23,8 +23,8 @@ describe('cards', function() {
       cards.addCard('3', 'h')
       cards.addCard('2', 'd')
 
-      assert(cards.value[0][1] === 1);
-      assert(cards.value[1][0] === 1);
+      assert(cards.ofHighCard[0][1] === 1);
+      assert(cards.ofHighCard[1][0] === 1);
     });
 
     it('should throw if the new card is already in the desk', function() {
@@ -50,10 +50,10 @@ describe('Hand', function() {
       cards.addCard('a', 'c');
       cards.addCard('q', 'c');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectFourOfAKind().asString === "Four of a Kind Three");
-      assert(hand.detectFourOfAKind().kicker === 12);
+      assert(hand.detectFourOfAKind().ofKicker === 12);
     });
 
     it('should return undefined for three of a kind', function() {
@@ -63,7 +63,7 @@ describe('Hand', function() {
       cards.addCard('3', 's');
       cards.addCard('3', 'c');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectFourOfAKind() === undefined);
     });
@@ -76,7 +76,7 @@ describe('Hand', function() {
       cards.addCard('3', 's');
       cards.addCard('4', 'c');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectFourOfAKind() === undefined);
     });
@@ -92,7 +92,7 @@ describe('Hand', function() {
       cards.addCard('7', 'h');
       cards.addCard('8', 'h');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectFlush().asString === 'Flush Hearts');
     });
@@ -105,7 +105,7 @@ describe('Hand', function() {
       cards.addCard('5', 'h');
       cards.addCard('7', 'h');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectFlush() === undefined);
     });
@@ -121,7 +121,7 @@ describe('Hand', function() {
       cards.addCard('6', 's');
       cards.addCard('7', 'h');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectStraight().asString === 'Straight Seven');
     });
@@ -137,7 +137,7 @@ describe('Hand', function() {
       cards.addCard('7', 's');
       cards.addCard('8', 's');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectStraight().asString === 'Straight Eight');
     });
@@ -151,7 +151,7 @@ describe('Hand', function() {
       cards.addCard('k', 's');
       cards.addCard('a', 'h');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectStraight().asString === 'Straight Ace');
     });
@@ -165,7 +165,7 @@ describe('Hand', function() {
       cards.addCard('a', 'h');
       cards.addCard('2', 'h');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectStraight() === undefined);
     });
@@ -179,7 +179,7 @@ describe('Hand', function() {
       cards.addCard('3', 'd');
       cards.addCard('4', 's');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectStraight() === undefined);
     });
@@ -192,7 +192,7 @@ describe('Hand', function() {
       cards.addCard('5', 'd');
       cards.addCard('6', 's');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectStraight() === undefined);
     });
@@ -208,7 +208,7 @@ describe('Hand', function() {
       cards.addCard('6', 'h');
       cards.addCard('7', 'h');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectStraightFlush().asString === 'Hearts Straight Seven');
     });
@@ -224,7 +224,7 @@ describe('Hand', function() {
       cards.addCard('8', 'h');
       cards.addCard('9', 's');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectStraightFlush().asString === 'Hearts Straight Eight');
     });
@@ -240,7 +240,7 @@ describe('Hand', function() {
       cards.addCard('8', 'h');
       cards.addCard('9', 'h');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectStraightFlush().asString === 'Hearts Straight Nine');
     });
@@ -254,7 +254,7 @@ describe('Hand', function() {
       cards.addCard('6', 'h');
       cards.addCard('7', 'h');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectStraightFlush().asString === 'Hearts Straight Seven');
     });
@@ -268,7 +268,7 @@ describe('Hand', function() {
       cards.addCard('6', 'h');
       cards.addCard('8', 'h');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectStraightFlush() === undefined);
     });
@@ -282,7 +282,7 @@ describe('Hand', function() {
       cards.addCard('6', 'h');
       cards.addCard('7', 's');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectStraightFlush() === undefined);
     });
@@ -298,7 +298,7 @@ describe('Hand', function() {
       cards.addCard('5', 'd');
       cards.addCard('5', 's');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectFullHouse().asString === 'Full House Fives full of Threes');
     });
@@ -316,7 +316,7 @@ describe('Hand', function() {
       cards.addCard('a', 'd');
       cards.addCard('a', 's');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectFullHouse().asString === 'Full House Aces full of Threes');
     });
@@ -332,7 +332,7 @@ describe('Hand', function() {
       cards.addCard('a', 'h');
       cards.addCard('a', 'd');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectFullHouse().asString === 'Full House Fives full of Aces');
     });
@@ -348,10 +348,10 @@ describe('Hand', function() {
       cards.addCard('3', 's');
       cards.addCard('2', 's');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectThreeOfAKind().asString === 'Three of a Kind Five');
-      assert(hand.detectThreeOfAKind().kicker === 1);
+      assert(hand.detectThreeOfAKind().ofKicker === 1);
     });
 
     it('should use the biggest triplet', function() {
@@ -364,7 +364,7 @@ describe('Hand', function() {
       cards.addCard('k', 'd');
       cards.addCard('k', 's');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectThreeOfAKind().asString === 'Three of a Kind Ace');
     });
@@ -379,7 +379,7 @@ describe('Hand', function() {
       cards.addCard('k', 'd');
       cards.addCard('k', 's');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectThreeOfAKind() === undefined);
     });
@@ -397,10 +397,10 @@ describe('Hand', function() {
       cards.addCard('3', 'h');
       cards.addCard('2', 'h');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectTwoPair().asString === 'Two pair Ace and Queen');
-      assert(hand.detectTwoPair().kicker === 8);
+      assert(hand.detectTwoPair().ofKicker === 8);
     });
 
     it('should use the biggest two pairs', function() {
@@ -413,7 +413,7 @@ describe('Hand', function() {
       cards.addCard('k', 'd');
       cards.addCard('k', 's');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectTwoPair().asString === 'Two pair Ace and King');
     });
@@ -430,14 +430,14 @@ describe('Hand', function() {
       cards.addCard('3', 'h');
       cards.addCard('2', 'h');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
       assert(hand.detectPair().asString === 'Pair Queen');
-      assert(hand.detectPair().kicker === 12);
+      assert(hand.detectPair().ofKicker === 12);
     });
   });
 
-  describe('when determining the quality of a hand', function() {
+  describe('when determining the ofHand of a hand', function() {
     it('detect the four of a kind over a full house', function() {
       const cards = new Cards();
 
@@ -448,9 +448,9 @@ describe('Hand', function() {
       cards.addCard('k', 'd');
       cards.addCard('k', 's');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
-      assert(hand.determineQualityOfHand().asString === 'Four of a Kind Ace');
+      assert(hand.quality.asString === 'Four of a Kind Ace');
     });
 
     it('return the high card if there is no other', function() {
@@ -463,12 +463,10 @@ describe('Hand', function() {
       cards.addCard('q', 'd');
       cards.addCard('k', 's');
 
-      const hand = new Hand(cards.value);
+      const hand = new Hand(cards.ofHighCard);
 
-      const qualityOfHand = hand.determineQualityOfHand();
-
-      assert(qualityOfHand.asString === "High Card");
-      assert(qualityOfHand.value === 12);
+      assert(hand.quality.asString === "High Card");
+      assert(hand.quality.ofHighCard === 12);
     });
   });
 });
@@ -554,7 +552,6 @@ describe('Holdem', function() {
         holdem.onNewLine('sara 5h kc');
 
         const displayStrings = holdem.getDisplayStrings();
-        holdem.displayWinners();
 
         assert(displayStrings[0].includes('sara'));
         assert(displayStrings[0].includes('Kicker'));
@@ -568,7 +565,6 @@ describe('Holdem', function() {
         holdem.onNewLine('sara 5h kc');
 
         const displayStrings = holdem.getDisplayStrings();
-        holdem.displayWinners();
 
         assert(displayStrings[0].includes('sara'));
         assert(displayStrings[0].includes('Kicker'));
@@ -582,10 +578,11 @@ describe('Holdem', function() {
         holdem.onNewLine('sara 5h kc');
 
         const displayStrings = holdem.getDisplayStrings();
-        holdem.displayWinners();
 
         assert(displayStrings[0].startsWith('1'));
         assert(displayStrings[1].startsWith('1'));
+        assert(!displayStrings[0].includes('Kicker'));
+        assert(!displayStrings[1].includes('Kicker'));
       });
 
       it('should know that a higher straight is worth more', function() {
@@ -594,10 +591,11 @@ describe('Holdem', function() {
         holdem.onNewLine('sara td js');
 
         const displayStrings = holdem.getDisplayStrings();
-        holdem.displayWinners();
 
         assert(displayStrings[0].includes('sara'));
         assert(displayStrings[1].includes('cole'));
+        assert(!displayStrings[0].includes('Kicker'));
+        assert(!displayStrings[1].includes('Kicker'));
       });
 
       it('should know that a higher straight flush is worth more', function() {
@@ -606,10 +604,11 @@ describe('Holdem', function() {
         holdem.onNewLine('sara td kc');
 
         const displayStrings = holdem.getDisplayStrings();
-        holdem.displayWinners();
 
         assert(displayStrings[0].includes('sara'));
         assert(displayStrings[1].includes('cole'));
+        assert(!displayStrings[0].includes('Kicker'));
+        assert(!displayStrings[1].includes('Kicker'));
       });
     });
   });

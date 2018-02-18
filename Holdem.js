@@ -19,6 +19,7 @@ class Holdem {
   }
 
   play() {
+    console.log('Starting game of Hold\'em');
     const holdemInterface = readline.createInterface({
       input: process.stdin,
       crlfDelay: Infinity,
@@ -93,33 +94,22 @@ class Holdem {
   }
 
   orderHandsIntoHierarchy() {
-    const players = this.players.map((player) => {
-      return {
-        name: player.name,
-        hand: player.getQualityOfHand(this.communityCards.value)
-      };
-    });
+    // for each player place into hierarchy of
+    // quality of hand
+    //   quality of hands high card
+    //     quality of kicker
+    return this.players.reduce(function(hierarchy, player) {
+      const {quality} = player.hand;
 
-    return players.reduce(function(hierarchy, playerStuff) {
-      const {quality, value, kicker} = playerStuff.hand;
+      hierarchy[quality.ofHand] = hierarchy[quality.ofHand] || {};
 
-      if (!hierarchy[quality]) {
-        hierarchy[quality] = {};
-      }
+      const qualityTier = hierarchy[quality.ofHand]
+      qualityTier[quality.ofHighCard] = qualityTier[quality.ofHighCard] || {};
 
-      const qualityTier = hierarchy[quality]
+      const valueTier = qualityTier[quality.ofHighCard];
+      valueTier[quality.ofKicker] = valueTier[quality.ofKicker] || [];
 
-      if (!qualityTier[value]) {
-        qualityTier[value] = {};
-      }
-
-      const valueTier = qualityTier[value];
-
-      if (!valueTier[kicker]) {
-        valueTier[kicker] = [];
-      }
-
-      valueTier[kicker].push(playerStuff);
+      valueTier[quality.ofKicker].push(player);
 
       return hierarchy;
     }, {});
@@ -129,30 +119,7 @@ class Holdem {
     const hierarchy = this.orderHandsIntoHierarchy();
     const displayStrings = [];
 
-    let place = 1;
-
-    const qualityKeys = Object.keys(hierarchy);
-    qualityKeys.sort(sortAsInt).reverse();
-    qualityKeys.forEach((quality) => {
-      const qualityTier = hierarchy[quality];
-      const valueKeys = Object.keys(qualityTier);
-      valueKeys.sort(sortAsInt).reverse();
-
-      valueKeys.forEach((value) => {
-        const valueTier = qualityTier[value];
-        const kickerKeys = Object.keys(valueTier);
-        kickerKeys.sort(sortAsInt).reverse();
-        const addKicker = kickerKeys.length > 1;
-
-        kickerKeys.forEach((kicker) => {
-          const kickerTier = valueTier[kicker];
-          kickerTier.forEach(function(player) {
-            displayStrings.push(createDisplayString(place, player, addKicker));
-          });
-          place += kickerTier.length;
-        });
-      });
-    });
+    recursivelyGetDisplayStrings(displayStrings, hierarchy, {place: 1});
 
     return displayStrings;
   }
@@ -168,11 +135,34 @@ class Holdem {
   }
 }
 
+function recursivelyGetDisplayStrings(displayStrings, tier, placeHolder) {
+  const keys = Object.keys(tier);
+  keys.sort(sortAsInt).reverse();
+  keys.forEach((key) => {
+    const newTier = tier[key];
+
+    if (newTier instanceof Array) {
+      const addKicker = keys.length > 1;
+      writeTierToDisplayStrings(displayStrings, newTier, placeHolder, addKicker);
+    } else {
+      recursivelyGetDisplayStrings(displayStrings, newTier, placeHolder);
+    }
+  });
+}
+
+function writeTierToDisplayStrings(displayStrings, players, placeHolder, addKicker) {
+  players.forEach(function(player) {
+    displayStrings.push(createDisplayString(placeHolder.place, player, addKicker));
+  });
+
+  placeHolder.place += players.length;
+}
+
 function createDisplayString(place, player, addKicker) {
-  const displayStringArray = [place, player.name, player.hand.asString];
+  const displayStringArray = [place, player.name, player.hand.quality.asString];
 
   if (addKicker) {
-    displayStringArray.push(`with ${Cards.getFaceStringByIndex(player.hand.kicker)} Kicker`);
+    displayStringArray.push(`with ${Cards.getFaceStringByIndex(player.hand.quality.ofKicker)} Kicker`);
   }
 
   return displayStringArray.join(' ')

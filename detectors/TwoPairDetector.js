@@ -13,7 +13,7 @@ class TwoPairDetector extends Detector {
       this.numberOfEachCard[firstPairIndex] = 0;
       this.numberOfEachCard[secondPairIndex] = 0;
 
-      return this.createReturnValue(
+      return this.getQuality(
         `Two pair ${firstPair} and ${secondPair}`,
         parseInt(`${firstPairIndex}${secondPairIndex}`),
         getKicker(this.numberOfEachCard)

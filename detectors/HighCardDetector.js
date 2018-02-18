@@ -4,7 +4,7 @@ const Detector = require('./Detector');
 
 class HighCardDetector extends Detector {
   isOfType() {
-    return this.createReturnValue(
+    return this.getQuality(
       'High Card',
       getKicker(this.numberOfEachCard)
     );

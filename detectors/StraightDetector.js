@@ -19,7 +19,7 @@ class StraightDetector extends Detector {
     const tailIndex = getTailIndexOfStraight(cardArray);
 
     if (tailIndex !== -1) {
-      return this.createReturnValue(
+      return this.getQuality(
         `Straight ${Cards.getFaceStringByIndex(tailIndex - 1)}`,
         tailIndex
       );

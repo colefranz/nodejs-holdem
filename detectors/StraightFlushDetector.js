@@ -12,7 +12,7 @@ class StraightFlushDetector extends Detector {
       if (tailIndex > 0) {
         const suitString = Cards.getSuitStringByIndex(suitIndex);
 
-        return this.createReturnValue(
+        return this.getQuality(
           `${suitString} Straight ${Cards.getFaceStringByIndex(tailIndex - 1)}`,
           tailIndex
         );

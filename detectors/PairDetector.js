@@ -9,7 +9,7 @@ class PairDetector extends Detector {
     if (index > 0) {
       this.numberOfEachCard[index] = 0;
 
-      return this.createReturnValue(
+      return this.getQuality(
         `Pair ${Cards.getFaceStringByIndex(index)}`,
         index,
         getKicker(this.numberOfEachCard)

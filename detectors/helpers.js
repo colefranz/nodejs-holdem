@@ -57,15 +57,15 @@ exports.getKicker = function(cards) {
     flattened = exports.flattenWithOperator(cards, exports.or);
   }
 
-  let kicker = -1;
+  let ofKicker = -1;
 
   for (let i = flattened.length - 1; i >= 0; i--) {
     if (flattened[i] > 0) {
-      kicker = i;
+      ofKicker = i;
 
       break;
     }
   }
 
-  return kicker;
+  return ofKicker;
 }

@@ -4,6 +4,7 @@ const detectors = require('./detectors/detectors');
 class Hand {
   constructor(cards) {
     this.cards = cards;
+    this.quality = this.determineQualityOfHand();
   }
 
   determineQualityOfHand() {
@@ -22,8 +23,8 @@ class Hand {
 
   // initially had all detectors in this file - leaving so as to not have to refactor every unit test
   // perhaps the unit tests could have been set up for better sustainability but I don't think so
-  detectWith(Detector, quality) {
-    const detector = new Detector(this.cards, quality);
+  detectWith(Detector, ofHand) {
+    const detector = new Detector(this.cards, ofHand);
 
     return detector.isOfType();
   }

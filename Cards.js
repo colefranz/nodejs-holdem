@@ -47,7 +47,7 @@ class Cards {
 
   constructor() {
     // 2d array of suits and values, all 0
-    this.value = suits.map(function(suit) {
+    this.ofHighCard = suits.map(function(suit) {
       return new Array(faceValues.length).fill(0);
     });
   }
@@ -57,22 +57,22 @@ class Cards {
     const suitIndex = suits.indexOf(suit.toLowerCase());
 
     if (faceIndex === -1) {
-      throw new Error(`${face} is not a valid face value`);
+      throw new Error(`${face} is not a valid face ofHighCard`);
     }
 
     if (suitIndex === -1) {
       throw new Error(`${suit} is not a valid suit`);
     }
 
-    if (this.value[suitIndex][faceIndex] != 0) {
+    if (this.ofHighCard[suitIndex][faceIndex] != 0) {
       throw new Error('You may not duplicate the card');
     }
 
-    this.value[suitIndex][faceIndex] = 1;
+    this.ofHighCard[suitIndex][faceIndex] = 1;
   }
 
   join(otherCards) {
-    return this.value.map(function(faces, suitIndex) {
+    return this.ofHighCard.map(function(faces, suitIndex) {
       return faces.map(function(faceValue, faceIndex) {
         return faceValue | otherCards[suitIndex][faceIndex];
       });
